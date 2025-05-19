@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,10 +8,11 @@
     body { font-family: Arial; margin: 0; background: #f5f5f5; }
     .app-container { max-width: 400px; margin: auto; padding: 20px; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-top: 50px; border-radius: 10px; }
     .title { text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 20px; }
-    input { width: 100%; padding: 10px; margin: 10px 0; }
-    button { width: 100%; padding: 10px; background: black; color: white; border: none; cursor: pointer; }
+    input, button { width: 100%; padding: 10px; margin: 10px 0; }
+    button { background: black; color: white; border: none; cursor: pointer; }
     .hidden { display: none; }
     .error { color: red; text-align: center; }
+    .clock { text-align: center; margin: 10px 0; font-size: 16px; color: #333; }
   </style>
 </head>
 <body>
@@ -25,9 +25,15 @@
       <button onclick="login()">Login</button>
       <p id="login-error" class="error"></p>
     </div>
+
     <div id="dashboard" class="hidden">
       <h2>Welcome, <span id="user-role"></span></h2>
+      <div class="clock" id="clock"></div>
       <div id="attendance-panel"></div>
+      <div id="attendance-buttons" class="hidden">
+        <button onclick="clockIn()">Clock In / حاضری لگائیں</button>
+        <button onclick="clockOut()">Clock Out / چھٹی کریں</button>
+      </div>
       <button onclick="logout()">Logout</button>
     </div>
   </div>
@@ -37,6 +43,14 @@
       employee1: { password: 'emp123', role: 'Employee' }
     };
 
+    let clockInterval;
+
+    function updateClock() {
+      const now = new Date();
+      const time = now.toLocaleTimeString();
+      document.getElementById('clock').innerText = 'Current Time: ' + time;
+    }
+
     function login() {
       const id = document.getElementById('userid').value;
       const pass = document.getElementById('password').value;
@@ -45,19 +59,34 @@
         document.getElementById('login-section').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
         document.getElementById('user-role').innerText = users[id].role;
+        document.getElementById('clock').classList.remove('hidden');
+        clockInterval = setInterval(updateClock, 1000);
+        updateClock();
         if (users[id].role === 'Admin') {
           document.getElementById('attendance-panel').innerHTML = '<p>You can manage all employees here.</p>';
         } else {
           document.getElementById('attendance-panel').innerHTML = '<p>View your attendance and salary info.</p>';
+          document.getElementById('attendance-buttons').classList.remove('hidden');
         }
       } else {
         error.innerText = 'Invalid login. Please try again.';
       }
     }
 
+    function clockIn() {
+      const now = new Date().toLocaleTimeString();
+      alert('Clocked In at: ' + now);
+    }
+
+    function clockOut() {
+      const now = new Date().toLocaleTimeString();
+      alert('Clocked Out at: ' + now);
+    }
+
     function logout() {
       document.getElementById('dashboard').classList.add('hidden');
       document.getElementById('login-section').classList.remove('hidden');
+      clearInterval(clockInterval);
     }
   </script>
 </body>
