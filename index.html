@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daniyal Raja Printers - Employee Management</title>
+  <style>
+    body { font-family: Arial; margin: 0; background: #f5f5f5; }
+    .app-container { max-width: 400px; margin: auto; padding: 20px; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-top: 50px; border-radius: 10px; }
+    .title { text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 20px; }
+    input { width: 100%; padding: 10px; margin: 10px 0; }
+    button { width: 100%; padding: 10px; background: black; color: white; border: none; cursor: pointer; }
+    .hidden { display: none; }
+    .error { color: red; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <h1 class="title">Daniyal Raja Printers</h1>
+    <div id="login-section">
+      <h2>Login</h2>
+      <input type="text" id="userid" placeholder="User ID" />
+      <input type="password" id="password" placeholder="Password" />
+      <button onclick="login()">Login</button>
+      <p id="login-error" class="error"></p>
+    </div>
+    <div id="dashboard" class="hidden">
+      <h2>Welcome, <span id="user-role"></span></h2>
+      <div id="attendance-panel"></div>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </div>
+  <script>
+    const users = {
+      admin: { password: 'admin123', role: 'Admin' },
+      employee1: { password: 'emp123', role: 'Employee' }
+    };
+
+    function login() {
+      const id = document.getElementById('userid').value;
+      const pass = document.getElementById('password').value;
+      const error = document.getElementById('login-error');
+      if (users[id] && users[id].password === pass) {
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        document.getElementById('user-role').innerText = users[id].role;
+        if (users[id].role === 'Admin') {
+          document.getElementById('attendance-panel').innerHTML = '<p>You can manage all employees here.</p>';
+        } else {
+          document.getElementById('attendance-panel').innerHTML = '<p>View your attendance and salary info.</p>';
+        }
+      } else {
+        error.innerText = 'Invalid login. Please try again.';
+      }
+    }
+
+    function logout() {
+      document.getElementById('dashboard').classList.add('hidden');
+      document.getElementById('login-section').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
